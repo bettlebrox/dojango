@@ -11,6 +11,7 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.utils import simplejson as json
 from django.utils.functional import Promise
+from django.contrib.gis.geos.geometry import GEOSGeometry
 
 try:
     # we need it, if we want to serialize query- and model-objects
@@ -127,6 +128,8 @@ def json_encode(data):
             ret = _model(data)
         elif appengine and isinstance(data, appengine.ext.db.Model):
             ret = _googleModel(data)
+        elif isinstance(data, GEOSGeometry):
+            ret = {}
         elif ObjectId and isinstance(data, ObjectId):
             ret = str(data)
         # here we need to encode the string as unicode (otherwise we get utf-16 in the json-response)
